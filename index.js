@@ -68,10 +68,11 @@ passport.deserializeUser(User.deserializeUser());
 app.use(async(req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
-    res.locals.deleted = req.flash("deleted");  // MUST be here
-       res.locals.currUser = req.user;   // 🔥 ADD THIS LINE
+    res.locals.deleted = req.flash("deleted");
+    res.locals.currUser = req.user;
+    res.locals.currentPath = req.path;   // 🔥 ADD THIS
 
-       const User = require("./models/user");
+    const User = require("./models/user");
 
     res.locals.wishlistCount = 0;
 

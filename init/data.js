@@ -1,16 +1,4 @@
 
-const mongoose=require("mongoose");
-const listing=require("../models/listing.js");
-
-main()
-.then(()=>{
-    console.log("connection SuccessFul");
-});
-
-async function main(){
-   await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
-  
-}
 
 const sampleListings = [
   {
@@ -364,6 +352,3 @@ const sampleListings = [
 ];
 
 module.exports = { data: sampleListings };
- listing.insertMany(sampleListings);
-console.log("data initialised");
-
