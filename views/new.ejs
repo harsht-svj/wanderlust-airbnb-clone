@@ -1,0 +1,104 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-5 mb-5" style="max-width: 750px;">
+
+    <h2 class="mb-4 fw-semibold text-dark">Create a New Listing</h2>
+            <!--enctype multipart krne se hmm files pdf ye sb upload kr skte h image m -->
+    <form action="/listings" method="POST" novalidate enctype="multipart/form-data" class="needs-validation">
+
+        <!-- Title -->
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text"
+                   class="form-control"
+                   placeholder="Add a catchy title"
+                  name="listing[title]"
+                   required>
+                    <div class="valid-feedback">Title looks Good!</div>
+                    <div class="invalid-feedback">Add Appropiate title</div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="listing[description]"
+                      class="form-control"
+                      rows="3"
+                      required></textarea>
+                      <div class="valid-feedback">description looks Good!</div>
+                    <div class="invalid-feedback">Add shorter description</div>
+        </div>
+
+        <!-- Image URL -->
+        <div class="mb-3">
+            <label class="form-label">Upload Image</label>
+            <input type="file"
+                   class="form-control"
+                   placeholder="enter image URL/Link"
+                  name="listing[image]"
+                   required>
+        </div>
+
+        <!-- Price & Country in Same Row -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Price</label>
+                <input type="number"
+                       class="form-control"
+                       placeholder="1200"
+                      name="listing[price]"
+                       required>
+                       <div class="valid-feedback">price looks Good!</div>
+                    <div class="invalid-feedback">put Appropiate price</div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Country</label>
+                <input type="text"
+                       class="form-control"
+                       placeholder="India"
+                       name="listing[country]"
+                       required>
+                       <div class="valid-feedback">Country looks Good!</div>
+                    <div class="invalid-feedback">Add Appropiate Country</div>
+            </div>
+        </div>
+        <div class="mb-3">
+    <label class="form-label">Category</label>
+
+    <select
+        class="form-select"
+        name="listing[category]"
+        required
+    >
+        <option value="Trending">Trending</option>
+        <option value="Rooms">Rooms</option>
+        <option value="Hi-tech cities">Hi-tech cities</option>
+        <option value="Farms">Farms</option>
+        <option value="Camping">Camping</option>
+        <option value="Amazing Pools">Amazing Pools</option>
+        <option value="Castles">Castles</option>
+        <option value="Mountain">Mountain</option>
+    </select>
+</div>
+
+        <!-- Location -->
+        <div class="mb-4">
+            <label class="form-label">Location</label>
+            <input type="text"
+                   class="form-control"
+                   placeholder="Jaipur, Rajasthan"
+                 name="listing[location]"
+                   required>
+                   <div class="valid-feedback">Location looks Good!</div>
+                    <div class="invalid-feedback">Add Appropiate Location</div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-danger px-4">
+            Add
+        </button>
+
+    </form>
+
+</div>

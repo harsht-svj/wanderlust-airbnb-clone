@@ -1,0 +1,99 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-5 mb-5" style="max-width: 750px;">
+
+    <h2 class="mb-4 fw-semibold text-dark">Edit Your Listing</h2>
+
+    <form enctype="multipart/form-data"  action="/listings/<%= list._id %>?_method=PUT"
+          method="POST" novalidate class="needs-validation">
+
+        <!-- Title -->
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text"
+                   class="form-control"
+                    name="listing[title]"
+                   value="<%= list.title %>"
+                   required>
+                    <div class="valid-feedback">Title looks Good!</div>
+                    <div class="invalid-feedback">Add Appropiate title</div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea  name="listing[description]"
+                      class="form-control"
+                      rows="3"
+                      required><%= list.description %></textarea>
+                       <div class="valid-feedback">description looks Good!</div>
+                    <div class="invalid-feedback">Add shorter description</div>
+        </div>
+     <div class="mb-3">
+  <p class="fw-semibold">Original Listing Image:</p>
+
+  <img 
+    src="<%= originalImage %>" 
+    style="width: 300px; height: 200px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);"
+  />
+</div>
+        <!-- Image URL -->
+        <div class="mb-3">
+            <label class="form-label">Image Link</label>
+            <input type="file"
+                   class="form-control"
+                  name="listing[image]"
+                   <!-- value="<%= list.image.url %>" -->
+        </div>
+
+        <!-- Price & Country -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Price</label>
+                <input type="number"
+                       class="form-control"
+                       name="listing[price]"
+                       value="<%= list.price %>"
+                       required>
+                          <div class="valid-feedback">price looks Good!</div>
+                    <div class="invalid-feedback">put Appropiate price</div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Country</label>
+                <input type="text"
+                       class="form-control"
+                       name="listing[country]"
+                       value="<%= list.country %>"
+                       required>
+                            <div class="valid-feedback">Country looks Good!</div>
+                    <div class="invalid-feedback">Add Appropiate Country</div>
+            </div>
+        </div>
+
+        <!-- Location -->
+        <div class="mb-4">
+            <label class="form-label">Location</label>
+            <input type="text"
+                   class="form-control"
+                    name="listing[location]"
+                   value="<%= list.location %>"
+                   required>
+                   <div class="valid-feedback">Location looks Good!</div>
+                    <div class="invalid-feedback">Add Appropiate Location</div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-dark px-4">
+                Update
+            </button>
+
+            <a href="/listings/<%= list._id %>" class="btn btn-outline-secondary">
+                Cancel
+            </a>
+        </div>
+
+    </form>
+
+</div>
