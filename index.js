@@ -101,7 +101,7 @@ main()
     console.log("connection SuccessFul");
 });
 
-console.log("MONGO_URL:", process.env.MONGO_URL);
+
 async function main(){
         await mongoose.connect(process.env.MONGO_URL);
   
