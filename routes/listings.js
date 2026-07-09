@@ -12,7 +12,7 @@ const {storage}=require("../cloudconfig.js");
 const upload=multer({storage});
 const listingcontroller=require("../controller/listing.js");
 
-
+//USING JOI:
 
 const validatelisting = (req, res, next) => {
     let { error } = listingSchema.validate(req.body);

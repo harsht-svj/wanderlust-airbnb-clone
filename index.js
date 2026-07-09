@@ -18,7 +18,7 @@ app.set("view engine","ejs");
 // const Review=require("./models/review.js");
 const LocalStrategy = require("passport-local").Strategy;
 const wishlistRoute = require("./routes/wishlist");
-
+const listing = require("./models/listing.js");
 
 //is used to filter the mutli part data used in image uploading 
 const multer  = require('multer')
@@ -33,7 +33,7 @@ const userRoute=require("./routes/user.js");
 const session=require("express-session");
 const flash=require("connect-flash");
 const passport=require("passport");
-
+const bookingRoutes=require("./routes/booking");
 const User=require("./models/user.js");
 
 app.use(express.static("public"));
@@ -81,6 +81,17 @@ app.use(async(req, res, next) => {
         res.locals.wishlistCount = user.wishlist.length;
     }
 
+    res.locals.hasListings = false;
+
+if(req.user){
+
+    const count = await listing.countDocuments({
+        owner:req.user._id
+    });
+
+    res.locals.hasListings = count > 0;
+}
+
     next();
 });
 
@@ -92,7 +103,7 @@ app.use("/",userRoute);
 app.use("/listings",listingRoute);
 app.use("/listings/:id",reviewRoute);
 app.use("/wishlist", wishlistRoute);
-
+app.use("/bookings",bookingRoutes);
 
 
 

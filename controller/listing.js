@@ -1,6 +1,7 @@
 const listing = require("../models/listing.js");
 
 const mbxGeocoding=require('@mapbox/mapbox-sdk/services/geocoding');
+//this contains the method like forward and backward geocode;
 const maptoken=process.env.MAP_TOKEN;
 const geocodingclient=mbxGeocoding({accessToken:maptoken});
   const User = require("../models/user");
@@ -44,27 +45,86 @@ res.render("home.ejs", {
 module.exports.rendernewform=(req, res) => {
     res.render("new.ejs");
 }
+module.exports.showindetail = async (req, res) => {
 
-
-  module.exports.showindetail=(async (req, res, next) => {
     let { id } = req.params;
-    let list = await listing.findById(id).populate({path:"reviews",populate:{path:"author"}},).populate("owner");
+
+    const Booking = require("../models/booking");
+
+    let list = await listing.findById(id)
+        .populate({
+            path: "reviews",
+            populate: {
+                path: "author",
+            },
+        })
+        .populate("owner");
 
     if (!list) {
         req.flash("deleted", "Listing you are trying to access does not exist.");
-        return res.redirect("/listings");   // IMPORTANT
+        return res.redirect("/listings");
     }
-        // console.log(list);
-        let wishlist = [];
 
-if (req.user) {
-    const User = require("../models/user");
-    const user = await User.findById(req.user._id);
-    wishlist = user.wishlist.map(id => id.toString());
-}
-    res.render("show.ejs", { list,wishlist});
-})
+    let wishlist = [];
 
+    if (req.user) {
+        const User = require("../models/user");
+        const user = await User.findById(req.user._id);
+        wishlist = user.wishlist.map(id => id.toString());
+    }
+
+    // All confirmed bookings for this listing
+    const bookings = await Booking.find({
+        listing: list._id,
+        status: "Confirmed",
+    }).select("checkIn checkOut");
+
+    // Build a flat array of every booked date (checkIn to checkOut, both inclusive)
+    const bookedDates = [];
+
+    bookings.forEach((booking) => {
+        let current = new Date(booking.checkIn);
+        let end = new Date(booking.checkOut);
+
+        while (current <= end) {
+            bookedDates.push(current.toISOString().split("T")[0]);
+            current.setDate(current.getDate() + 1);
+        }
+    });
+
+    let myBooking = null;
+    let canReview = false;
+
+    if (req.user) {
+
+        myBooking = await Booking.findOne({
+            listing: list._id,
+            user: req.user._id,
+            status: "Confirmed",
+        });
+
+        if (myBooking) {
+
+            const today = new Date();
+
+            if (today > myBooking.checkOut) {
+                canReview = true;
+            }
+
+        }
+
+    }
+
+    res.render("show.ejs", {
+        list,
+        wishlist,
+        bookings,
+        bookedDates,
+        myBooking,
+        canReview,
+    });
+
+};
 
 module.exports.newlisting = async (req, res, next) => {
 
@@ -104,30 +164,46 @@ module.exports.editpage=(async(req,res,next)=>{
     res.render("edit.ejs",{list,originalImage});
 });
 
-
 module.exports.edit = async (req, res, next) => {
     let { id } = req.params;
 
-    // ✅ Always update text data
+    // Get old listing before updating
+    let oldListing = await listing.findById(id);
+
+    // Update text fields
     let updatedListing = await listing.findByIdAndUpdate(
         id,
         req.body.listing,
         { runValidators: true, new: true }
     );
 
-    // ✅ Only update image if new file uploaded
+    // Update coordinates only if location changed
+    if (oldListing.location !== req.body.listing.location) {
+        const response = await geocodingclient.forwardGeocode({
+            query: req.body.listing.location,
+            limit: 1,
+        }).send();
+
+        if (response.body.features.length > 0) {
+            updatedListing.geometry = response.body.features[0].geometry;
+        }
+    }
+
+    // Update image only if a new one was uploaded
     if (typeof req.file !== "undefined") {
         let url = req.file.path;
         let filename = req.file.filename;
 
-      
         updatedListing.image = { url, filename };
-        await updatedListing.save();
     }
+
+    // Save any changes (geometry/image)
+    await updatedListing.save();
 
     req.flash("success", "Listing Updated");
     res.redirect(`/listings/${id}`);
 };
+
 
 module.exports.delete=(async(req,res,next)=>{
 

@@ -1,0 +1,344 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container py-5">
+
+    <!-- Dashboard Header -->
+
+    <div class="mb-5">
+
+       <h1 class="display-5 fw-bold mb-2">
+    <%= currUser.username %>'s Dashboard
+</h1>
+
+        <p class="text-muted fs-5">
+            Welcome back 👋 Here's an overview of your properties and bookings.
+        </p>
+
+    </div>
+
+    <% if(bookings.length>0){ %>
+
+    <!-- Statistics -->
+
+    <div class="row g-4 mt-4 mb-5 pb-4 border-bottom">
+
+        <div class="col-lg-2 col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body text-center py-4">
+
+                    <h6 class="text-muted mb-3">
+                        Bookings
+                    </h6>
+
+                    <h2 class="fw-bold">
+                        <%= totalBookings %>
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-2 col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body text-center py-4">
+
+                    <h6 class="text-muted mb-3">
+                        Revenue
+                    </h6>
+
+                    <h2 class="fw-bold text-success">
+                        ₹<%= revenue.toLocaleString("en-IN") %>
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-2 col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body text-center py-4">
+
+                    <h6 class="text-muted mb-3">
+                        Confirmed
+                    </h6>
+
+                    <h2 class="fw-bold text-success">
+                        <%= confirmedBookings %>
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-2 col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body text-center py-4">
+
+                    <h6 class="text-muted mb-3">
+                        Upcoming
+                    </h6>
+
+                    <h2 class="fw-bold text-primary">
+                        <%= upcomingBookings %>
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-2 col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body text-center py-4">
+
+                    <h6 class="text-muted mb-3">
+                        Cancelled
+                    </h6>
+
+                    <h2 class="fw-bold text-danger">
+                        <%= cancelledBookings %>
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-2 col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body text-center py-4">
+
+                    <h6 class="text-muted mb-3">
+                        Properties
+                    </h6>
+
+                    <h2 class="fw-bold">
+                        <%= totalProperties %>
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Recent Bookings Header -->
+
+    <div class="d-flex justify-content-between align-items-center mt-5 mb-4">
+
+        <h3 class="fw-bold">
+            Recent Bookings
+        </h3>
+
+        <span class="badge bg-dark fs-6 px-3 py-2">
+
+            <%= totalBookings %> Total
+
+        </span>
+
+    </div>
+
+    <% } %>
+
+    <% if(bookings.length===0){ %>
+
+    <div class="text-center py-5">
+
+        <img
+        src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
+        width="130">
+
+        <h3 class="mt-4">
+
+            No Bookings Yet
+
+        </h3>
+
+        <p class="text-muted">
+
+            Once someone books your property,
+            it will appear here.
+
+        </p>
+
+        <a
+        href="/listings"
+        class="btn btn-dark">
+
+            View Listings
+
+        </a>
+
+    </div>
+
+    <% } %>
+
+    <% bookings.forEach(booking=>{ %>
+
+    <div class="card border-0 shadow rounded-5 overflow-hidden mb-5">
+
+        <div class="row g-3 align-items-center">
+
+            <div class="col-md-4 p-4">
+
+                <img
+                src="<%= booking.listing.image.url %>"
+                class="img-fluid rounded-4 shadow-sm"
+                style="height:270px;width:100%;object-fit:cover;">
+
+            </div>
+
+            <div class="col-md-8">
+
+                <div class="card-body py-4 px-4">
+
+                    <div class="d-flex justify-content-between align-items-start">
+
+                        <h2 class="fw-bold mb-3">
+
+                            <%= booking.listing.title %>
+
+                        </h2>
+
+                        <% if(booking.status==="Confirmed"){ %>
+
+                        <span class="badge bg-success fs-6 px-3 py-2">
+
+                            Confirmed
+
+                        </span>
+
+                        <% } else { %>
+
+                        <span class="badge bg-danger fs-6 px-3 py-2">
+
+                            Cancelled
+
+                        </span>
+
+                        <% } %>
+
+                    </div>
+
+                    <hr class="mb-4">
+
+
+                                        <div class="row gy-4">
+
+                        <!-- Guest Details -->
+
+                        <div class="col-md-6">
+
+                            <h5 class="fw-bold mb-4">
+                                Guest Details
+                            </h5>
+
+                            <p class="mb-3">
+                                <i class="fa-solid fa-user me-3 text-primary"></i>
+                                <strong>Name:</strong>
+                                <%= booking.user.username %>
+                            </p>
+
+                            <p class="mb-3">
+                                <i class="fa-solid fa-envelope me-3 text-danger"></i>
+                                <strong>Email:</strong>
+                                <%= booking.user.email %>
+                            </p>
+
+                            <p class="mb-3">
+                                <i class="fa-solid fa-users me-3 text-success"></i>
+                                <strong>Guests:</strong>
+                                <%= booking.guests %>
+                            </p>
+
+                        </div>
+
+                        <!-- Booking Details -->
+
+                        <div class="col-md-6">
+
+                            <h5 class="fw-bold mb-4">
+                                Booking Details
+                            </h5>
+
+                            <p class="mb-3">
+                                <i class="fa-solid fa-calendar-days me-3 text-primary"></i>
+                                <strong>Check In:</strong>
+                                <%= booking.checkIn.toDateString() %>
+                            </p>
+
+                            <p class="mb-3">
+                                <i class="fa-solid fa-calendar-check me-3 text-success"></i>
+                                <strong>Check Out:</strong>
+                                <%= booking.checkOut.toDateString() %>
+                            </p>
+
+                            <p class="mb-3">
+                                <i class="fa-solid fa-indian-rupee-sign me-3 text-warning"></i>
+                                <strong>Revenue:</strong>
+                                ₹<%= booking.totalPrice.toLocaleString("en-IN") %>
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+                        <small class="text-muted">
+
+                            <i class="fa-regular fa-clock me-2"></i>
+
+                            Booked on
+                            <%= booking.createdAt.toDateString() %>
+
+                        </small>
+
+                        <a
+                            href="/listings/<%= booking.listing._id %>"
+                            class="btn btn-outline-dark rounded-pill px-4"
+                        >
+
+                            <i class="fa-solid fa-eye me-2"></i>
+
+                            View Listing
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <% }) %>
+
+</div>
